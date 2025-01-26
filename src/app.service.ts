@@ -8,12 +8,27 @@ export class AppService {
         return await this.sql(`SELECT * FROM "Item"`);
     }
 
-    async getItem(name: 'bottle' | 'utensil'): Promise<any> {
+    async getItemsWithDateRange(dateFrom: string, dateTo: string): Promise<any[]> {
+        return await this.sql(`
+            SELECT * FROM "Item"
+            WHERE DATE(detected_on) BETWEEN '${dateFrom}' AND '${dateTo}'
+        `);
+    }
+
+    async getItem(name: 'bottle' | 'utensil'): Promise<any[]> {
         return await this.sql(`
             SELECT * FROM "Item"
             WHERE name = '${name}'
             ORDER BY detected_on ASC   
         `)
+    }
+
+    async getItemWithDateRange(name: 'bottle' | 'utensil', dateFrom: string, dateTo: string): Promise<any[]> {
+        return await this.sql(`
+            SELECT * FROM "Item"
+            WHERE name = '${name}'
+            AND (DATE(detected_on) BETWEEN '${dateFrom}' AND '${dateTo}')
+        `);
     }
 
     async addItem(name: 'bottle' | 'utensil'): Promise<any> {

@@ -1,8 +1,8 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { AppService } from '@/app.service';
 import { ItemDto } from '@/item.dto';
 
-@Controller()
+@Controller('/item')
 export class AppController {
     constructor(private readonly appService: AppService) {}
 
@@ -10,12 +10,19 @@ export class AppController {
      * GET REQUESTS
      */
     @Get()
-    async getItems() {
+    async getItems(@Query('dateFrom') dateFrom?: string, @Query('dateTo') dateTo?: string) {
+        if (dateFrom && dateTo)
+            return this.appService.getItemsWithDateRange(dateFrom, dateTo);
         return this.appService.getItems();
     }
 
     @Get(':name')
-    async getItem(@Param() params: ItemDto) {
+    async getItem(
+        @Param() params: ItemDto,
+        @Query('dateFrom') dateFrom?: string, @Query('dateTo') dateTo?: string
+    ) {
+        if (dateFrom && dateTo)
+            return this.appService.getItemWithDateRange(params.name, dateFrom, dateTo);
         return this.appService.getItem(params.name);
     }
 
