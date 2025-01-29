@@ -1,3 +1,3 @@
-export class ItemDto {
+export class ItemsDto {
     name: 'bottle' | 'utensil';
 }
